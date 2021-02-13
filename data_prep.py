@@ -43,7 +43,7 @@ def data_prep():
 
     if acc_id!="":
         data=pd.DataFrame()
-        dat_type = st.radio("Select the type of Data",('Pre-Processed Data','Raw Data'))
+        dat_type = st.radio("Select the type of Data",('Pre-Processed Data(Test)','Raw Data'))
         if dat_type=='Pre-Processed Data':
             mode="preprocessed"
             prepro_data = st.file_uploader("Upload Preprocessed Data", type=["csv"])
@@ -59,7 +59,7 @@ def data_prep():
                     d=(os.system('python '+ rp_dir+'/directory_creation.py '+str(acc_id) + ' ' + root_dir))
                     if d==0:
                         preprocess.main(raw_data,acc_id,root_dir,mode)
-                        data=pd.read_csv(root_dir+"/account_"+str(acct_id)+"/data_extracted/retraining_data.csv")
+                        data=pd.read_csv(root_dir+"/account_"+str(acc_id)+"/data_extracted/retraining_data.csv")
                     else:
                         st.error("Could not create Directory")
 
