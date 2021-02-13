@@ -1,0 +1,17 @@
+SELECT account_id AS `fk_account_id`,
+	COUNT(*) AS `Failed_Cheques`
+FROM document_uploads
+WHERE initial_status NOT IN (
+		"Success",
+		"Customer Master not found",
+		"AR Check Failed"
+		)
+	AND document_id IN (
+		SELECT fk_document_uploads_id
+		FROM `caa_ocr_remittance_hdr`
+		WHERE `check_amount` != '0.00'
+			AND `fk_email_attachement_id` IS NULL
+			AND DATE (create_time) >= start_date
+			AND DATE (create_time) < end_date
+		)
+GROUP BY account_id

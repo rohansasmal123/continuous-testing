@@ -1,0 +1,8 @@
+SELECT fk_account_id,
+	COUNT(*) AS `Total_Cheques`
+FROM `caa_ocr_remittance_hdr`
+WHERE `check_amount` != '0.00'
+	AND `fk_email_attachement_id` IS NULL
+	AND DATE (create_time) >= start_date
+	AND DATE (create_time) < end_date
+GROUP BY fk_account_id

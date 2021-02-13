@@ -1,0 +1,6 @@
+Months,Accounts monitored,Green( >=95),Green(>=80 & <95),Yellow(>=50 & <80),Red(<50%),No PRLF,Accounts with no Predictions,Accounts with Predictions but No Data From Q2
+Aug-20,17,7,0,1,0,-,9,-
+Sep-20,52,37,12,3,0,-,0,-
+Oct-20,107,44,12,2,0,8,21,20
+Nov-20,131,50,18,4,2,5,30,20
+Dec-20,151,62,12,11,1,9,46,4

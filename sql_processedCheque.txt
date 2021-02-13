@@ -1,0 +1,13 @@
+SELECT COUNT(irh.pk_inbound_remittance_header_id) AS `Processed_Cheques`,
+	irh.fk_account_id
+FROM caa_machine_learning_lookup cml
+INNER JOIN caa_inbound_remittance_header irh
+	ON irh.pk_inbound_remittance_header_id = cml.fk_caa_inbound_remittance_header_id
+INNER JOIN `caa_ocr_remittance_hdr` AS ocr_hdr
+	ON `inbound_remittance_header_id` = fk_caa_inbound_remittance_header_id
+WHERE irh.fk_email_attachment_id IS NULL
+	AND irh.payment_amount != 0.00
+	AND irh.create_date >= start_date
+	AND irh.create_date < end_date 
+	AND cml.algorithm = "JOASIS_ML_LITM"
+GROUP BY fk_account_id

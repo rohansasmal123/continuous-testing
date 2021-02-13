@@ -1,0 +1,11 @@
+SELECT COUNT(`pk_inbound_remittance_header_id`) AS 'Cleared_Cheques',
+	fk_account_id
+FROM caa_inbound_remittance_header
+WHERE pk_inbound_remittance_header_id IN (
+		SELECT fk_inbound_remittance_header_id
+		FROM caa_inbound_remittance_item
+		WHERE data_captured_algo IN ('ML_LITM')
+			AND create_date >= start_date
+			AND create_date < end_date
+		)
+GROUP BY fk_account_id

@@ -1,0 +1,8 @@
+streamlit==0.70.0
+numpy==1.14.5
+pymysql==0.10.1
+gspread==3.6.0
+SQLAlchemy==1.3.20
+sshtunnel
+mysql_connector
+flatten_json
