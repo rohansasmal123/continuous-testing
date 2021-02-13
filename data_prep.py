@@ -10,6 +10,7 @@ import sys
 import webbrowser
 import numpy as np
 
+import rpscript.rpmodelling.preprocess as preprocess
 
 def data_prep():
     img_path='/root/caascript/res/bg/'
@@ -33,12 +34,6 @@ def data_prep():
         st.write("Account "+str(acc_id)+" has been executed till "+stat)
     
     
-        
-                          
-    
-    
-    
-    
     cred_r={'ip':None,
             'uid':None,
             'pwd':None,
@@ -47,13 +42,29 @@ def data_prep():
             }
 
     if acc_id!="":
-        upl_data = st.file_uploader("Upload Retraining Data", type=["csv"])
-        if upl_data is not None:
-            upl_data.seek(0)
-            data=pd.read_csv(upl_data)
- 
-            c = st.radio("Select Execution Method",('Local','Remote'))
+        data=pd.DataFrame()
+        dat_type = st.radio("Select the type of Data",('Pre-Processed Data','Raw Data'))
+        if dat_type=='Pre-Processed Data':
+            mode="preprocessed"
+            prepro_data = st.file_uploader("Upload Preprocessed Data", type=["csv"])
+            if prepro_data is not None:
+                prepro_data.seek(0)
+                data=pd.read_csv(prepro_data)
+        else:
+            mode="dataprep"
+            raw_data = st.file_uploader("Upload Raw Data", type=["csv"])
             
+            if raw_data is not None:
+                if st.checkbox("Start Preprocessing"):
+                    d=(os.system('python '+ rp_dir+'/directory_creation.py '+str(acc_id) + ' ' + root_dir))
+                    if d==0:
+                        preprocess.main(raw_data,acc_id,root_dir,mode)
+                        data=pd.read_csv(root_dir+"/account_"+str(acct_id)+"/data_extracted/retraining_data.csv")
+                    else:
+                        st.error("Could not create Directory")
+
+        if not data.empty:
+            c = st.radio("Select Execution Method",('Local','Remote'))
             if c=='Remote':
                 if os.path.exists(root_dir+'/vmcred.csv'):
                     cred_df=pd.read_csv(root_dir+'/vmcred.csv')
@@ -195,19 +206,18 @@ def data_prep():
                     #Directory Creation
                     if menu_bar =='Directory Creation':
                         if st.button(label='Start Directory Creation'):
-                            if len(acc_id)!=0:
+                            if mode!="dataprep":
                                 with st.spinner("Execution in progress..."):
                                     d=(os.system('python '+ rp_dir+'/directory_creation.py '+str(acc_id) + ' ' + root_dir))
-
-                                st.success("Directory Created")
-                                
-                                data.to_csv(dock_path+'/data_extracted/retraining_data.csv',index=False)
-                                
-                                if not os.path.exists(path):
-                                    os.makedirs(path)
-
+                                if d==0:
+                                    st.success("Directory Created")
+                                    data.to_csv(dock_path+'/data_extracted/retraining_data.csv',index=False)
+                                    if not os.path.exists(path):
+                                        os.makedirs(path)
+                                else:
+                                    st.error("Directory creation Failed")
                             else:
-                                st.error('Account Id cannot be empty Directory Creation Failed!')
+                                st.warning('Directory already exists')
                     
                     
                     #History Generation
@@ -339,10 +349,9 @@ def data_prep():
                                 st.write(summary)
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------                
-         
         
         else:
-            st.warning("Please Upload the Retraining Data to Proceed")
+            st.warning("Please Upload Data to Proceed")
     else:
         st.text("Press Enter To Continue")
         

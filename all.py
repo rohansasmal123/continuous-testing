@@ -5,7 +5,7 @@
 '''
 #--------Packages-----------
 import streamlit as st
-st.set_page_config(page_title="HighRadius™ |CASH APPLICATION CLOUD", page_icon='/root/caascript/res/bg/logo.png')
+st.set_page_config(page_title="HighRadius™ | CASH APPLICATION CLOUD", page_icon='/root/caascript/res/bg/logo.png')
 import pandas as pd
 import numpy as np
 import time

@@ -1,6 +1,6 @@
 '''
 !/usr/bin/env python
-@author:rohan_sasmal,ayanava_dutta,subhrojyoti_roy,shivam_gupta
+@author:ayanava_dutta,subhrojyoti_roy,rohan_sasmal,shivam_gupta
 -*-coding:utf-8-*-
 '''
 import streamlit as st
