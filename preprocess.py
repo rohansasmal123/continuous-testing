@@ -20,11 +20,9 @@ def preprocess(raw_data,processed_data_path,mode):
         if mode!="auto":
             st.warning("Count of features not matched \n\n Please check console for more information")
             st.error("Preprocessing Failed!")
-            if st.checkbox("Show Difference"):
-                st.write("Features :\n"+str(diff)+"\n absent from the data")
+            print("Features :\n"+str(diff)+"\n absent from the data")
         else:
-            print("\nFeatures not found :")
-            print(diff)
+            print("Features :\n"+str(diff)+"\n absent from the data")
             print('Dataset must have exactly 23 columns. Exited.\n\n ')
             exit(0)
 
@@ -103,10 +101,6 @@ def preprocess(raw_data,processed_data_path,mode):
             print("Error occured while converting to datetime format")
             
             
-
-
-
-        
 
 def main(raw_data,acct_id,root_dir,mode):
     processed_data_path = root_dir+"/account_"+str(acct_id)+"/data_extracted/retraining_data.csv"

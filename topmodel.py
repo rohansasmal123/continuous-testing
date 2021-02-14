@@ -1,6 +1,6 @@
 '''
 !/usr/bin/env python
-@author:rohan_sasmal,,ayanava_dutta,subhrojyoti_roy,shivam_gupta
+@author:rohan_sasmal,ayanava_dutta,subhrojyoti_roy,shivam_gupta
 -*-coding:utf-8-*-
 '''
 import pandas as pd

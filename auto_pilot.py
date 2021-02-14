@@ -1,8 +1,3 @@
-'''
-!/usr/bin/env python
-@author:ayanava_dutta,subhrojyoti_roy,rohan_sasmal,shivam_gupta
--*-coding:utf-8-*-
-'''
 import streamlit as st
 import os
 import pandas as pd
@@ -22,7 +17,7 @@ import sys
 from rpscript.rpmodelling.topmodel import topmodel
 from rpscript.rpmodelling import DataExt
 from rpscript.rpmodelling.mod2 import make_predictions
-import rpscript.rpmodelling.preprocess
+import rpscript.rpmodelling.preprocess as preprocess
 
 @st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def execute(exectute_from,acct_id,root_dir,rp_dir):
@@ -177,7 +172,8 @@ def auto_pilot():
                         dir_exe=os.system("python "+rp_dir+"/directory_creation.py "+ str(acct_id) +" "+root_dir)
                         #preprocess.preprocess(data_extracted, processed_data_path)
                         if (dir_exe == 0):
-                            pre_pro=os.system("python "+rp_dir+"/preprocess.py "+ str(acct_id) +" "+root_dir)
+                            mode='auto'
+                            preprocess.main(data,acct_id,root_dir,mode)
                             if (pre_pro==0):
                                 hist_exe=os.system("python "+rp_dir+"/HistoryGeneration.py " +str(acct_id) + " "+root_dir)
                                 if hist_exe!=0:

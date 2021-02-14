@@ -160,10 +160,10 @@ def countdown(t):
 
 
 
-def get_creds(account_no):
+def get_creds(account_no,cred_path):
     root_dir='/root/caa/rp/model'
     data_extracted=root_dir+'/Data_Extracted/'
-    cred_path = '/root/caascript/res/cred.csv'
+    
 
     output_path = data_extracted
     st.header("Data Extraction")  
@@ -188,12 +188,7 @@ def get_creds(account_no):
     if not os.path.exists(data_extracted):
         os.makedirs(data_extracted)
 
-    if not os.path.exists(cred_path):
-        st.subheader("Please enter credentials")
-        ldap_user = st.text_input(label="Enter LDAP User name")
-        ldap_pass=st.text_input(label="Enter LDAP Password",type="password")
-        db_pass = st.text_input(label="Enter the Host Address",type="password")
-        
+    
     
     if(len(account_no)!=0):
         if os.path.exists(output_path+'Data_Sheet.csv'):
@@ -311,10 +306,14 @@ def get_creds(account_no):
 
 def main():
     img_path='/root/caascript/res/bg/'
+    cred_path = '/root/caascript/res/cred.csv'
     page_bg(img_path+'dataext_pic.png')
     account_no=st.text_input(label="Enter Account ID")
-
-    if account_no!="":
-        get_creds(account_no) 
+    if os.path.exists(cred_path):
+        if account_no!="":
+            get_creds(account_no,cred_path) 
         
-    else:("Enter account ID to proceed")   
+        else:
+            st.warning("Enter account ID to proceed")   
+    else:
+        st.warning("Please Save your Credentials via Login Page")

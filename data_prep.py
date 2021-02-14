@@ -40,9 +40,9 @@ def data_prep():
             'acc_dir':None,
             'code_dir':None
             }
-
+    data=pd.DataFrame()
     if acc_id!="":
-        data=pd.DataFrame()
+        master=0
         dat_type = st.radio("Select the type of Data",('Pre-Processed Data','Raw Data'))
         if dat_type=='Pre-Processed Data':
             mode="preprocessed"
@@ -53,17 +53,12 @@ def data_prep():
         else:
             mode="dataprep"
             raw_data = st.file_uploader("Upload Raw Data", type=["csv"])
-            
             if raw_data is not None:
-                if st.checkbox("Start Preprocessing"):
-                    d=(os.system('python '+ rp_dir+'/directory_creation.py '+str(acc_id) + ' ' + root_dir))
-                    if d==0:
-                        preprocess.main(raw_data,acc_id,root_dir,mode)
-                        data=pd.read_csv(root_dir+"/account_"+str(acct_id)+"/data_extracted/retraining_data.csv")
-                    else:
-                        st.error("Could not create Directory")
+                raw_data.seek(0)
+                data=pd.read_csv(raw_data)
+                
 
-        if not data.empty:
+        if master==0:
             c = st.radio("Select Execution Method",('Local','Remote'))
             if c=='Remote':
                 if os.path.exists(root_dir+'/vmcred.csv'):
@@ -203,6 +198,7 @@ def data_prep():
                 if c2== 'Individual':
                     menu_bar = st.selectbox(label='What do you want to do?', options=['Directory Creation','History Generation','Json Creation','Subset Creation','Features Creation','Train-Test-Split'])
                     
+
                     #Directory Creation
                     if menu_bar =='Directory Creation':
                         if st.button(label='Start Directory Creation'):
@@ -217,7 +213,14 @@ def data_prep():
                                 else:
                                     st.error("Directory creation Failed")
                             else:
-                                st.warning('Directory already exists')
+                                with st.spinner("Execution in progress..."):
+                                    d=(os.system('python '+ rp_dir+'/directory_creation.py '+str(acc_id) + ' ' + root_dir))
+                                    if d==0:
+                                        preprocess.main(raw_data,acc_id,root_dir,mode)
+                                        if not os.path.exists(path):
+                                            os.makedirs(path)
+                                    else:
+                                        st.error("Operation Failed!")
                     
                     
                     #History Generation
@@ -323,13 +326,21 @@ def data_prep():
                     if st.button(label='Start Execution'):
                         with st.spinner("Execution in Progress...."):
                             d=(os.system('python '+ rp_dir+'/directory_creation.py '+str(acc_id)+ ' ' + root_dir))
-                            if d==0:
+                            if d==0 and mode=='preprocessed':
                                 data.to_csv(dock_path+'/data_extracted/retraining_data.csv',index=False)
                                 for task in tasks:
                                     d=(os.system('python '+ rp_dir+'/'+str(task)+' '+str(acc_id) + ' ' + root_dir))
                                     if d!=0:
                                         st.error(task.split('.')[0] + " Failed")
-                                        break    
+                                        break  
+
+                            elif d==0 and mode=='dataprep':
+                                preprocess.main(raw_data,acc_id,root_dir,mode)
+                                for task in tasks:
+                                    d=(os.system('python '+ rp_dir+'/'+str(task)+' '+str(acc_id) + ' ' + root_dir))
+                                    if d!=0:
+                                        st.error(task.split('.')[0] + " Failed")
+                                        break  
                             else:
                                 st.error("Directory Creation Failed!!")
                         st.success("Flow Operation executed Successfully!!")
