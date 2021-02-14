@@ -77,7 +77,7 @@ def make_predictions(test_data_path, model_path, predictions_path):
 
 if __name__ == '__main__':
     acct_id = str(sys.argv[1])
-    root_dir='/root/accounts'
+    root_dir='/root/caa/rp/model/'
     test_data_path = root_dir+'account_'+str(acct_id)+'/train_test_splitted/test_30.csv'
     model_path = root_dir+'account_'+str(acct_id)+'/trained_model/model.pkl'
     predictions_path = root_dir+'account_'+str(acct_id)+'/predictions/predictions.csv'

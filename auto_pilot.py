@@ -51,7 +51,7 @@ def save_model(predictions_path,test_path,model_path,user_model,summary,dock_pat
     if st.button(label="Generate Test Files"):
         with st.spinner("Execution in Progress"):
             pickle.dump(user_model, open(model_path, 'wb'))
-            os.system('python ' +rp_dir+'/MakePredictions.py')
+            os.system('python ' +rp_dir+'/MakePredictions.py '+ str(acct_id))
             os.system('python '+rp_dir+'/PMML_creation.py '+str(acct_id)+" "+str(root_dir))                  
             os.system('python '+rp_dir+'/generate_Test_Files.py '+str(acct_id)+" "+str(root_dir))
             st.success("Test Files Generated")
@@ -160,18 +160,20 @@ def auto_pilot():
                 save_model(predictions_path, test_path, model_path, user_model, summary, dock_path,acct_id,root_dir,rp_dir)
         
         else:
-            if st.checkbox(label='Start Data Extraction: '):
-                DataExt.main()
-            else:
-                upl_data = st.file_uploader("Upload Raw Data", type=["csv"])
-                if upl_data is not None:
-                    upl_data.seek(0)
 
+            if os.path.exists(root_dir+'/account_'+str(acct_id)+'/top10.csv'):
+                top10percent=pd.read_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv')
+                user_select(top10percent,predictions_path,test_path,model_path,summary,dock_path,acct_id,root_dir,rp_dir)
+            else:
+                if st.checkbox(label='Start Data Extraction: '):
+                    DataExt.main()
+                else:
+                    upl_data = st.file_uploader("Upload Raw Data", type=["csv"])
+                    if upl_data is not None:
+                        upl_data.seek(0)
                     data=pd.read_csv(upl_data)
                     data.to_csv(data_extracted,index=False)
 
-
-            if not os.path.exists(root_dir+'/account_'+str(acct_id)+'/top10.csv'):
                 if os.path.exists(data_extracted):
                     if st.button(label='Start Auto Pilot Mode'):
                         
@@ -194,6 +196,8 @@ def auto_pilot():
                                             top10percent.to_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv',index=False)
                                             #user_select(top10percent)
                                             st.success("Best models evaluated")
+                                            if st.button("Select Model"):
+                                                pass
                                         else:
                                             print("Top 10 evaluation failed")
                                         
@@ -205,9 +209,6 @@ def auto_pilot():
 
                 else:
                     st.warning("Extract Data before proceeding")
-            else:
-                top10percent=pd.read_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv')
-                user_select(top10percent,predictions_path,test_path,model_path,summary,dock_path,acct_id,root_dir,rp_dir)
 
     else:
         st.warning("Enter account Id to Proceed!")
