@@ -89,7 +89,7 @@ def select_model(root_dir,acct_id,top10percent,index):
     return train_model.fit(X_train,y_train)
     
       
-def user_select(top10percent,predictions_path,test_path,model_path,user_model,summary,dock_path,acct_id,root_dir,rp_dir):
+def user_select(top10percent,predictions_path,test_path,model_path,summary,dock_path,acct_id,root_dir,rp_dir):
     index = 0
     ch = st.radio('Select the model', ('model 1', 'model 2', 'model 3', 'model 4', 'model 5'))
     st.subheader("Model Parameters :")
@@ -173,7 +173,7 @@ def auto_pilot():
 
             if not os.path.exists(root_dir+'/account_'+str(acct_id)+'/top10.csv'):
                 if os.path.exists(data_extracted):
-                    if st.checkbox(label='Start Auto Pilot Mode'):
+                    if st.button(label='Start Auto Pilot Mode'):
                         
                         with st.spinner("Execution in Progress"):
                             dir_exe=os.system("python "+rp_dir+"/directory_creation.py "+ str(acct_id) +" "+root_dir)
@@ -207,7 +207,7 @@ def auto_pilot():
                     st.warning("Extract Data before proceeding")
             else:
                 top10percent=pd.read_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv')
-                user_select(top10percent,predictions_path,test_path,model_path,user_model,summary,dock_path,acct_id,root_dir,rp_dir)
+                user_select(top10percent,predictions_path,test_path,model_path,summary,dock_path,acct_id,root_dir,rp_dir)
 
     else:
         st.warning("Enter account Id to Proceed!")
