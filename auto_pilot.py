@@ -171,15 +171,16 @@ def auto_pilot():
                     with st.spinner("Execution in Progress"):
                         dir_exe=os.system("python "+rp_dir+"/directory_creation.py "+ str(acct_id) +" "+root_dir)
                         #preprocess.preprocess(data_extracted, processed_data_path)
+                        pre_pro=1
                         if (dir_exe == 0):
                             mode='auto'
                             preprocess.main(data,acct_id,root_dir,mode)
+                            pre_pro=0
                             if (pre_pro==0):
                                 hist_exe=os.system("python "+rp_dir+"/HistoryGeneration.py " +str(acct_id) + " "+root_dir)
                                 if hist_exe!=0:
                                     st.error("History Creation failed")
                                 else:
-                                    history = pd.read_csv(root_dir+"/account_"+str(acct_id)+"/history_generated/history.csv")
                                     top10percent = execute("HistoryGeneration.py",acct_id,root_dir,rp_dir)
                                     st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
                                     index=user_select()
