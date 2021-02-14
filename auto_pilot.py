@@ -89,7 +89,7 @@ def select_model(root_dir,acct_id,top10percent,index):
     return train_model.fit(X_train,y_train)
     
       
-def user_select(top10percent):
+def user_select(top10percent,predictions_path,test_path,model_path,user_model,summary,dock_path,acct_id,root_dir,rp_dir):
     index = 0
     ch = st.radio('Select the model', ('model 1', 'model 2', 'model 3', 'model 4', 'model 5'))
     st.subheader("Model Parameters :")
@@ -189,11 +189,11 @@ def auto_pilot():
                                         st.error("History Creation failed")
                                     else:
                                         top10percent = execute("HistoryGeneration.py",acct_id,root_dir,rp_dir)
-                                        st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
+                                        
                                         if top10percent.shape[1]!=0:
                                             top10percent.to_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv',index=False)
                                             #user_select(top10percent)
-
+                                            st.success("Best models evaluated")
                                         else:
                                             print("Top 10 evaluation failed")
                                         
@@ -207,7 +207,7 @@ def auto_pilot():
                     st.warning("Extract Data before proceeding")
             else:
                 top10percent=pd.read_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv')
-                user_select(top10percent)
+                user_select(top10percent,predictions_path,test_path,model_path,user_model,summary,dock_path,acct_id,root_dir,rp_dir)
 
     else:
         st.warning("Enter account Id to Proceed!")
