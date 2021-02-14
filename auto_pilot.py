@@ -95,19 +95,19 @@ def user_select():
     st.subheader("Model Parameters :")
     if ch == "model 1":
         index = 1
-        #st.write(top10percent.iloc[index-1]['model_params'])
+        st.write(top10percent.iloc[index-1]['model_params'])
     elif ch == "model 2":
         index = 2
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     elif ch == "model 3":
         index = 3
-            #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     elif ch == "model 4":
         index = 4
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     elif ch == "model 5":
         index = 5
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     return index
 
                 
@@ -166,7 +166,7 @@ def auto_pilot():
 
         
             if os.path.exists(data_extracted):
-                if st.button(label='Start Auto Pilot Mode'):
+                if st.checkbox(label='Start Auto Pilot Mode'):
                     
                     with st.spinner("Execution in Progress"):
                         dir_exe=os.system("python "+rp_dir+"/directory_creation.py "+ str(acct_id) +" "+root_dir)
