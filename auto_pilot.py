@@ -190,7 +190,7 @@ def auto_pilot():
                                 else:
                                     top10percent = execute("HistoryGeneration.py",acct_id,root_dir,rp_dir)
                                     st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
-                                    if top10percent!='':
+                                    if top10percent.shape[1]!=0:
                                         user_select(top10percent)
                                     else:
                                         print("Top 10 evaluation failed")
