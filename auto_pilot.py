@@ -47,7 +47,7 @@ def execute(exectute_from,acct_id,root_dir,rp_dir):
                 st.error(script[i].split(".")[0]+" Failed!")
               
         
-def save_model(predictions_path,test_path,model_path, user_model,summary,dock_path,acct_id,root_dir,rp_dir):
+def save_model(predictions_path,test_path,model_path,user_model,summary,dock_path,acct_id,root_dir,rp_dir):
     if st.button(label="Generate Test Files"):
         with st.spinner("Execution in Progress"):
             pickle.dump(user_model, open(model_path, 'wb'))
@@ -108,7 +108,14 @@ def user_select(top10percent):
     elif ch == "model 5":
         index = 5
         st.write(top10percent.iloc[index - 1]['model_params'])
-    return index
+
+    if st.checkbox("Select "+ch):
+        user_model=select_model(root_dir,acct_id,top10percent,index)
+        save_model(predictions_path,test_path,model_path,user_model,summary,dock_path,acct_id,root_dir,rp_dir)
+        
+
+
+        
 
                 
 
@@ -137,7 +144,7 @@ def auto_pilot():
         top10percent=pd.DataFrame()
         progress=pd.DataFrame()
         
-        if os.path.exists(progress_path):
+        if os.path.exists(progress_path+"/iuehvieuviu"):
             
             
             progress=pd.read_csv(progress_path)
@@ -183,8 +190,12 @@ def auto_pilot():
                                 else:
                                     top10percent = execute("HistoryGeneration.py",acct_id,root_dir,rp_dir)
                                     st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
-                                    index=user_select()
-                                    select_model(root_dir,acct_id,top10percent,index)
+                                    if top10percent!='':
+                                        user_select(top10percent)
+                                    else:
+                                        print("Top 10 evaluation failed")
+                                    
+
                             else:
                                 st.error("Preprocessing Failed!")
                         else:
