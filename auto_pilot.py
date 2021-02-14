@@ -171,38 +171,43 @@ def auto_pilot():
                     data.to_csv(data_extracted,index=False)
 
 
-        
-            if os.path.exists(data_extracted):
-                if st.checkbox(label='Start Auto Pilot Mode'):
-                    
-                    with st.spinner("Execution in Progress"):
-                        dir_exe=os.system("python "+rp_dir+"/directory_creation.py "+ str(acct_id) +" "+root_dir)
-                        #preprocess.preprocess(data_extracted, processed_data_path)
-                        pre_pro=1
-                        if (dir_exe == 0):
-                            mode='auto'
-                            preprocess.main(data,acct_id,root_dir,mode)
-                            pre_pro=0
-                            if (pre_pro==0):
-                                hist_exe=os.system("python "+rp_dir+"/HistoryGeneration.py " +str(acct_id) + " "+root_dir)
-                                if hist_exe!=0:
-                                    st.error("History Creation failed")
-                                else:
-                                    top10percent = execute("HistoryGeneration.py",acct_id,root_dir,rp_dir)
-                                    st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
-                                    if top10percent.shape[1]!=0:
-                                        user_select(top10percent)
+            if not os.path.exists(root_dir+'/account_'+str(acct_id)+'/top10.csv'):
+                if os.path.exists(data_extracted):
+                    if st.checkbox(label='Start Auto Pilot Mode'):
+                        
+                        with st.spinner("Execution in Progress"):
+                            dir_exe=os.system("python "+rp_dir+"/directory_creation.py "+ str(acct_id) +" "+root_dir)
+                            #preprocess.preprocess(data_extracted, processed_data_path)
+                            pre_pro=1
+                            if (dir_exe == 0):
+                                mode='auto'
+                                preprocess.main(data,acct_id,root_dir,mode)
+                                pre_pro=0
+                                if (pre_pro==0):
+                                    hist_exe=os.system("python "+rp_dir+"/HistoryGeneration.py " +str(acct_id) + " "+root_dir)
+                                    if hist_exe!=0:
+                                        st.error("History Creation failed")
                                     else:
-                                        print("Top 10 evaluation failed")
-                                    
+                                        top10percent = execute("HistoryGeneration.py",acct_id,root_dir,rp_dir)
+                                        st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
+                                        if top10percent.shape[1]!=0:
+                                            top10percent.to_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv',index=False)
+                                            #user_select(top10percent)
 
+                                        else:
+                                            print("Top 10 evaluation failed")
+                                        
+
+                                else:
+                                    st.error("Preprocessing Failed!")
                             else:
-                                st.error("Preprocessing Failed!")
-                        else:
-                            st.error("Directory Creation Failed!")
+                                st.error("Directory Creation Failed!")
 
+                else:
+                    st.warning("Extract Data before proceeding")
             else:
-                st.warning("Extract Data before proceeding")
+                top10percent=pd.read_csv(root_dir+'/account_'+str(acct_id)+'/top10.csv')
+                user_select(top10percent)
 
     else:
         st.warning("Enter account Id to Proceed!")
