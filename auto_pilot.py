@@ -171,8 +171,8 @@ def auto_pilot():
                     upl_data = st.file_uploader("Upload Raw Data", type=["csv"])
                     if upl_data is not None:
                         upl_data.seek(0)
-                    data=pd.read_csv(upl_data)
-                    data.to_csv(data_extracted,index=False)
+                        data=pd.read_csv(upl_data)
+                        data.to_csv(data_extracted,index=False)
 
                 if os.path.exists(data_extracted):
                     if st.button(label='Start Auto Pilot Mode'):
