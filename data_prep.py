@@ -43,7 +43,7 @@ def data_prep():
     data=pd.DataFrame()
     if acc_id!="":
         master=0
-        dat_type = st.radio("Select the type of Data",('Pre-Processed Data','Raw Data'))
+        dat_type = st.radio("Select the type of Data",('Pre-Processed Data(Test)','Raw Data'))
         if dat_type=='Pre-Processed Data':
             mode="preprocessed"
             prepro_data = st.file_uploader("Upload Preprocessed Data", type=["csv"])
