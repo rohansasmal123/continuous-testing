@@ -89,25 +89,25 @@ def select_model(root_dir,acct_id,top10percent,index):
     return train_model.fit(X_train,y_train)
     
       
-def user_select():
+def user_select(top10percent):
     index = 0
     ch = st.radio('Select the model', ('model 1', 'model 2', 'model 3', 'model 4', 'model 5'))
     st.subheader("Model Parameters :")
     if ch == "model 1":
         index = 1
-        #st.write(top10percent.iloc[index-1]['model_params'])
+        st.write(top10percent.iloc[index-1]['model_params'])
     elif ch == "model 2":
         index = 2
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     elif ch == "model 3":
         index = 3
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     elif ch == "model 4":
         index = 4
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     elif ch == "model 5":
         index = 5
-        #st.write(top10percent.iloc[index - 1]['model_params'])
+        st.write(top10percent.iloc[index - 1]['model_params'])
     return index
 
                 
@@ -147,7 +147,7 @@ def auto_pilot():
                 top10percent = execute(progress['Status'][0],acct_id,root_dir,rp_dir)
                 st.table(top10percent[['model_name','percentage','accuracy_score','recall_1','recall_0','recall_diff']].shift()[1:].head(5))
                 #st.write(top10percent)
-                index=user_select()
+                index=user_select(top10percent)
                 user_model = select_model(root_dir,acct_id,top10percent,index)
                 st.write("YOU HAVE SELECTED: ",user_model)
                 save_model(predictions_path, test_path, model_path, user_model, summary, dock_path,acct_id,root_dir,rp_dir)
